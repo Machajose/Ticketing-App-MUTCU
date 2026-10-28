@@ -1,0 +1,37 @@
+import { ArrowRight, ArrowUpRight, CalendarDays, Clock3, Plus, Ticket, Users, Wallet } from 'lucide-react';
+import { event, formatMoney } from '../../config/event';
+import SectionTitle from '../ui/SectionTitle';
+import TicketTable from '../tickets/TicketTable';
+
+function Stat({ icon: Icon, label, value, note, accent = 'orange' }) {
+  const tone = { orange: 'text-ember bg-ember/10', green: 'text-emerald-300 bg-emerald-300/10', gold: 'text-gold bg-gold/10', purple: 'text-violet-300 bg-violet-300/10' }[accent];
+  return <div className="rounded-2xl border border-white/[.07] bg-panel/80 p-4 transition hover:border-white/[.12] sm:p-5"><div className="flex items-center justify-between"><span className="text-[10px] font-semibold uppercase tracking-[.13em] text-white/40">{label}</span><span className={`grid h-8 w-8 place-items-center rounded-lg ${tone}`}><Icon size={15}/></span></div><div className="mt-4 font-display text-[25px] font-extrabold tracking-[-.04em] text-white">{value}</div><div className="mt-2 text-[10px] text-white/35">{note}</div></div>;
+}
+
+export default function OverviewPage({ tickets, stats, loading, setPage, onNew, onTicket }) {
+  const recent = tickets.slice(0, 5);
+  return <>
+    <SectionTitle eyebrow={event.date} title="Your event at a glance" description="Track ticket sales and get your team ready for the performance." actions={<button onClick={onNew} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-ember px-4 text-xs font-bold text-ink transition hover:bg-[#ff7748]"><Plus size={16}/> Issue a ticket · KES 50</button>}/>
+
+    <section className="relative mb-6 min-h-[250px] overflow-hidden rounded-[22px] border border-white/[.1] bg-[#1c1010] shadow-glow sm:min-h-[280px]">
+      <img src={event.overviewArtwork} alt="Romantic theatre lighting and hearts for Mapenzi ya Kifaurongo" className="absolute inset-0 h-full w-full object-cover object-[center_56%] opacity-90"/>
+      <div className="absolute inset-0 bg-gradient-to-r from-[#100708]/95 via-[#18090c]/70 to-[#16070b]/25"/>
+      <div className="grain absolute inset-0 opacity-15"/>
+      <div className="relative flex min-h-[250px] flex-col justify-between gap-6 p-6 sm:min-h-[280px] sm:flex-row sm:items-end sm:px-8 sm:py-7">
+        <div className="max-w-[670px]"><div className="inline-flex items-center gap-2 rounded-full border border-ember/30 bg-black/30 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[.17em] text-orange-100"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-ember"/> Live play performance · Edition III</div><h2 className="mt-4 max-w-[15ch] font-display text-[30px] font-extrabold leading-[1.04] tracking-[-.04em] text-white sm:text-[42px]">{event.name}<span className="text-ember">.</span></h2><div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[11px] font-medium text-white/75"><span className="inline-flex items-center gap-1.5"><CalendarDays size={13} className="text-ember"/>{event.shortDate}</span><span className="inline-flex items-center gap-1.5"><Clock3 size={13} className="text-ember"/>{event.time}</span><span>{event.venue}</span></div></div>
+        <div className="flex shrink-0 items-end gap-4"><div className="rounded-xl border border-white/15 bg-black/35 px-4 py-3 backdrop-blur-sm"><div className="text-[9px] uppercase tracking-[.16em] text-white/45">Admission</div><div className="mt-1 font-display text-xl font-extrabold text-white">{formatMoney(event.price)}</div></div><button onClick={() => setPage('tickets')} className="grid h-11 w-11 place-items-center rounded-full border border-white/30 bg-black/20 text-white transition hover:border-ember hover:bg-ember hover:text-ink" aria-label="Open guest list"><ArrowRight size={18}/></button></div>
+      </div>
+    </section>
+
+    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"><Stat icon={Ticket} label="Tickets issued" value={stats.total} note={`Capacity ${event.capacity} · ${formatMoney(event.price)} each`}/><Stat icon={Users} label="Guests checked in" value={stats.checkedIn} note={stats.total ? `${Math.round(stats.checkedIn / stats.total * 100)}% of ticket holders` : 'No admissions yet'} accent="green"/><Stat icon={Clock3} label="Expected arrivals" value={stats.expected} note="Tickets not checked in" accent="gold"/><Stat icon={Wallet} label="Ticket revenue" value={formatMoney(stats.revenue)} note="Calculated from issued tickets" accent="purple"/></div>
+
+    <div className="mt-6 grid gap-5 xl:grid-cols-[1.35fr_.9fr]">
+      <section className="rounded-2xl border border-white/[.07] bg-panel/80 p-5 sm:p-6"><div className="flex items-start justify-between"><div><h3 className="text-sm font-bold text-white">Guest check-in</h3><p className="mt-1 text-[10px] text-white/35">Admission progress for this event</p></div><span className="rounded-lg border border-white/[.08] px-2.5 py-1.5 text-[10px] text-white/45">{stats.total ? `${Math.round(stats.checkedIn / stats.total * 100)}% complete` : 'No check-ins yet'}</span></div><div className="mt-7 h-2 overflow-hidden rounded-full bg-white/[.07]"><div className="h-full rounded-full bg-gradient-to-r from-ember to-gold transition-all" style={{ width: `${stats.total ? stats.checkedIn / stats.total * 100 : 0}%` }}/></div><div className="mt-4 flex justify-between text-[10px] text-white/40"><span><span className="text-emerald-300">{stats.checkedIn}</span> admitted</span><span>{stats.expected} expected</span></div><button onClick={() => setPage('checkin')} className="mt-7 inline-flex items-center gap-2 rounded-lg border border-white/[.08] px-3 py-2 text-[10px] font-semibold text-white/65 hover:border-ember/40 hover:text-white">Open door check-in <ArrowRight size={13}/></button></section>
+      <section className="rounded-2xl border border-white/[.07] bg-panel/80 p-5 sm:p-6"><div className="flex items-start justify-between"><div><h3 className="text-sm font-bold text-white">Event details</h3><p className="mt-1 text-[10px] text-white/35">Everything guests need to know</p></div><CalendarDays size={16} className="text-ember"/></div><div className="mt-5 space-y-3"><Detail label="Date" value={event.date}/><Detail label="Time" value={event.time}/><Detail label="Venue" value={event.venue}/><Detail label="Ticket price" value={formatMoney(event.price)}/></div><div className="mt-5 flex items-center gap-2 border-t border-white/[.06] pt-4 text-[10px] text-white/40"><ArrowUpRight size={13} className="text-emerald-300"/> Local demo · sample ticket data</div></section>
+    </div>
+
+    <section className="mt-6 overflow-hidden rounded-2xl border border-white/[.07] bg-panel/80"><div className="flex items-center justify-between border-b border-white/[.06] px-5 py-4 sm:px-6"><div><h3 className="text-sm font-bold text-white">Latest ticket activity</h3><p className="mt-1 text-[10px] text-white/35">Most recently issued passes</p></div><button onClick={() => setPage('tickets')} className="rounded-lg px-3 py-2 text-[10px] font-semibold text-white/50 transition hover:bg-white/[.05] hover:text-white">All guests <ArrowRight size={12} className="ml-1 inline"/></button></div><TicketTable tickets={recent} loading={loading} onTicket={onTicket} compact/></section>
+  </>;
+}
+
+function Detail({ label, value }) { return <div className="flex items-center justify-between gap-3 border-b border-white/[.05] pb-3 last:border-0 last:pb-0"><span className="text-[10px] text-white/35">{label}</span><span className="text-right text-[10px] font-semibold text-white/75">{value}</span></div>; }
