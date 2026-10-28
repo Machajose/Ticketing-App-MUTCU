@@ -1,4 +1,4 @@
-import { CalendarDays, Gem, LayoutDashboard, Settings, Sparkles, Ticket, TicketCheck, X } from 'lucide-react';
+import { CalendarDays, LayoutDashboard, Settings, Sparkles, Ticket, TicketCheck, X } from 'lucide-react';
 import { event } from '../../config/event';
 
 const links = [
@@ -13,8 +13,8 @@ export default function Sidebar({ page, setPage, tickets, open, onClose, notify 
     <aside className={`${open ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-40 flex w-[256px] flex-col border-r border-white/[.07] bg-[#141312] px-5 py-6 transition-transform duration-200 lg:sticky lg:top-0 lg:h-screen lg:translate-x-0`}>
       <div className="flex items-center justify-between px-1">
         <button onClick={() => { setPage('overview'); onClose(); }} className="flex items-center gap-3 text-left">
-          <span className="grid h-10 w-10 place-items-center rounded-xl bg-ember text-ink shadow-glow"><Gem size={20} strokeWidth={2.5}/></span>
-          <span><span className="block font-display text-sm font-extrabold tracking-[.19em]">GEMS</span><span className="mt-0.5 block text-[9px] font-bold tracking-[.24em] text-white/40">EVENT CONSOLE</span></span>
+          <img src="/gems-tickets-mark.svg" alt="" className="h-10 w-10 rounded-xl shadow-glow" />
+          <span><span className="block font-display text-sm font-extrabold tracking-[.12em]">GEMS TICKETS</span><span className="mt-0.5 block text-[9px] font-bold tracking-[.2em] text-white/40">TICKETING CONSOLE</span></span>
         </button>
         <button onClick={onClose} aria-label="Close navigation" className="text-white/50 lg:hidden"><X size={18}/></button>
       </div>
@@ -39,3 +39,4 @@ export default function Sidebar({ page, setPage, tickets, open, onClose, notify 
     </aside>
   </>;
 }
+
