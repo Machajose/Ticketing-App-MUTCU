@@ -70,7 +70,7 @@ export function useTickets(user, notify, setScanResult, preview = false) {
     if (duplicateReference) throw new Error('That M-Pesa reference is already attached to a ticket. Check the code and try again.');
     if (preview) {
       const serial = tickets.length + 1;
-      const ticket = { id: crypto.randomUUID(), ticketId: 'GEMS' + String(serial).padStart(3, '0'), token: crypto.randomUUID(), fullName: fullName.trim(), phone: phone.trim(), mpesaCode: mpesaCode.trim().toUpperCase(), ticketType: 'General admission', pricePaid: event.price, payment_status: 'confirmed', status: 'Not checked in', created_at: new Date().toISOString() };
+      const ticket = { id: crypto.randomUUID(), ticketId: 'KIF' + String(serial).padStart(3, '0'), token: crypto.randomUUID(), fullName: fullName.trim(), phone: phone.trim(), mpesaCode: mpesaCode.trim().toUpperCase(), ticketType: 'General admission', pricePaid: event.price, payment_status: 'confirmed', status: 'Not checked in', created_at: new Date().toISOString() };
       setTickets((current) => [ticket, ...current]);
       return ticket;
     }

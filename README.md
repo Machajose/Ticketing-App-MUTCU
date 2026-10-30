@@ -1,6 +1,6 @@
-# GEMS Tickets
+# Creative Ministry Tickets
 
-GEMS Tickets is the event operations workspace for issuing admission tickets, managing guests, and checking tickets in. Production uses Supabase Auth and row-level security for access to live guest records.
+Creative Ministry Tickets is the event operations workspace for issuing admission tickets, managing guests, and checking tickets in. Production uses Supabase Auth and row-level security for access to live guest records.
 
 ## Local preview
 

@@ -41,8 +41,8 @@ export default function AuthPage({ supabase }) {
     <div className="grain pointer-events-none absolute inset-0 opacity-[.06]" />
     <section className="relative w-full max-w-[420px] rounded-[26px] border border-white/[.09] bg-[#191817]/95 p-6 shadow-2xl sm:p-8">
       <div className="flex items-center gap-3">
-        <img src="/gems-tickets-mark.svg" alt="" className="h-11 w-11 rounded-xl" />
-        <div><div className="font-display text-sm font-extrabold tracking-[.12em]">GEMS TICKETS</div><div className="mt-1 text-[9px] font-bold tracking-[.2em] text-white/40">EVENT WORKSPACE</div></div>
+        <img src="/creative-ministry-tickets-mark.svg" alt="" className="h-11 w-11 rounded-xl" />
+        <div><div className="font-display text-sm font-extrabold tracking-[.12em]">CREATIVE MINISTRY</div><div className="mt-1 text-[9px] font-bold tracking-[.2em] text-white/40">TICKETS WORKSPACE</div></div>
       </div>
       <div className="mt-8"><h1 className="font-display text-2xl font-extrabold text-white">Sign in</h1><p className="mt-2 text-xs leading-relaxed text-white/45">Use your organizer account to manage tickets and check in guests.</p></div>
       <form onSubmit={signIn} className="mt-6 space-y-4">

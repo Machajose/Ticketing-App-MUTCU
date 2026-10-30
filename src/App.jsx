@@ -49,7 +49,7 @@ export default function App() {
   if (!supabaseConfigReady) return <SetupNotice message="Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY to .env.local, then restart the dev server."/>;
   if (authLoading) return <LoadingScreen label="Connecting to your secure workspace…"/>;
   if (!session) return <AuthPage supabase={supabase}/>;
-  return <Workspace user={session.user} authError={authError} onSignOut={() => supabase.auth.signOut()}/>;
+  return <Workspace user={session.user} authError={authError} onSignOut={() => supabase.auth.signOut({ scope: 'local' })}/>;
 }
 
 function Workspace({ user, authError, onSignOut, preview = false }) {
@@ -80,7 +80,7 @@ function Workspace({ user, authError, onSignOut, preview = false }) {
     const csv = [columns, ...rows].map((row) => row.map((value) => '"' + String(value ?? '').replaceAll('"', '""') + '"').join(',')).join('\r\n');
     const link = document.createElement('a');
     link.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
-    link.download = 'gems-guest-list.csv';
+    link.download = 'creative-ministry-guest-list.csv';
     link.click();
     window.setTimeout(() => URL.revokeObjectURL(link.href), 1000);
   };
@@ -99,7 +99,7 @@ function Workspace({ user, authError, onSignOut, preview = false }) {
           {page === 'tickets' && <GuestsPage event={event} tickets={tickets} loading={loading} onNew={() => setIssueOpen(true)} onTicket={openTicket} onExport={exportCsv} canManageTickets={role === 'owner' || role === 'manager'}/>}
           {page === 'checkin' && <CheckInPage tickets={tickets} result={scanResult} setResult={setScanResult} checkIn={checkIn}/>}
         </div>
-        <footer className="mx-auto flex max-w-[1440px] flex-col gap-2 border-t border-white/[.06] px-4 py-5 text-[10px] text-white/25 sm:flex-row sm:justify-between sm:px-8 lg:px-10"><span>GEMS TICKETS <span className="px-1">·</span> {preview ? "LOCAL PREVIEW · NOT SAVED" : "SECURE EVENT WORKSPACE"}</span><span>{event.name} · {event.venue}</span></footer>
+        <footer className="mx-auto flex max-w-[1440px] flex-col gap-2 border-t border-white/[.06] px-4 py-5 text-[10px] text-white/25 sm:flex-row sm:justify-between sm:px-8 lg:px-10"><span>CREATIVE MINISTRY TICKETS <span className="px-1">·</span> {preview ? "LOCAL PREVIEW · NOT SAVED" : "SECURE EVENT WORKSPACE"}</span><span>{event.name} · {event.venue}</span></footer>
       </main>
     </div>
     {issueOpen && (role === 'owner' || role === 'manager') && <IssueTicketModal event={event} onClose={() => setIssueOpen(false)} onCreate={createTicket} onCreated={async (ticket) => { setIssueOpen(false); setPage('tickets'); notify(preview ? 'Preview ticket created. This is not saved.' : 'Ticket issued and saved to Supabase'); await openTicket(ticket); }}/>}

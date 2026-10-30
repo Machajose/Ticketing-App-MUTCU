@@ -14,8 +14,8 @@ export default function Sidebar({ page, setPage, tickets, event, role, email, pr
     <aside className={`${open ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-40 flex w-[256px] flex-col border-r border-white/[.07] bg-[#141312] px-5 py-6 transition-transform duration-200 lg:sticky lg:top-0 lg:h-screen lg:translate-x-0`}>
       <div className="flex items-center justify-between px-1">
         <button onClick={() => { setPage('overview'); onClose(); }} className="flex items-center gap-3 text-left">
-          <img src="/gems-tickets-mark.svg" alt="" className="h-10 w-10 rounded-xl shadow-glow" />
-          <span><span className="block font-display text-sm font-extrabold tracking-[.12em]">GEMS TICKETS</span><span className="mt-0.5 block text-[9px] font-bold tracking-[.2em] text-white/40">EVENT WORKSPACE</span></span>
+          <img src="/creative-ministry-tickets-mark.svg" alt="" className="h-10 w-10 rounded-xl shadow-glow" />
+          <span><span className="block font-display text-sm font-extrabold tracking-[.12em]">CREATIVE MINISTRY</span><span className="mt-0.5 block text-[9px] font-bold tracking-[.2em] text-white/40">TICKETS WORKSPACE</span></span>
         </button>
         <button onClick={onClose} aria-label="Close navigation" className="text-white/50 lg:hidden"><X size={18}/></button>
       </div>
