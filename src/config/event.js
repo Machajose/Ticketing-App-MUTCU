@@ -22,3 +22,15 @@ export function mapEvent(row) {
 }
 
 export const formatMoney = (amount, currency = 'KES') => currency + ' ' + Number(amount || 0).toLocaleString('en-KE');
+
+export const localPreviewEvent = mapEvent({
+  id: 'local-preview-event',
+  name: 'Mapenzi ya Kifaurongo',
+  edition: 'Edition III',
+  venue: 'Assembly Hall',
+  starts_at: '2026-11-04T19:00:00+03:00',
+  ends_at: '2026-11-04T21:00:00+03:00',
+  currency: 'KES',
+  ticket_price: 50,
+  capacity: 250,
+});

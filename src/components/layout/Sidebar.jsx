@@ -6,7 +6,7 @@ const links = [
   { id: 'checkin', label: 'Door check-in', icon: TicketCheck },
 ];
 
-export default function Sidebar({ page, setPage, tickets, event, role, email, open, onClose, onSignOut }) {
+export default function Sidebar({ page, setPage, tickets, event, role, email, preview, open, onClose, onSignOut }) {
   const capacityLabel = event.capacity ? `${tickets.length} / ${event.capacity}` : `${tickets.length} issued`;
   const fill = event.capacity ? Math.min(tickets.length / event.capacity * 100, 100) : 0;
   return <>
@@ -27,7 +27,7 @@ export default function Sidebar({ page, setPage, tickets, event, role, email, op
 
       <div className="mt-9 px-2 text-[9px] font-bold uppercase tracking-[.22em] text-white/30">Current event</div>
       <div className="mt-3 rounded-2xl border border-white/[.07] bg-white/[.025] p-3.5">
-        <div className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400"/><span className="text-[10px] font-semibold uppercase tracking-[.14em] text-emerald-300">Connected</span></div>
+        <div className="flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-emerald-400"/><span className={`text-[10px] font-semibold uppercase tracking-[.14em] ${preview ? "text-gold" : "text-emerald-300"}`}>{preview ? "Local preview" : "Connected"}</span></div>
         <div className="mt-3 font-display text-[13px] font-bold text-white">{event.name}</div>
         <div className="mt-1.5 flex items-center gap-1.5 text-[11px] text-white/40"><CalendarDays size={12}/>{event.shortDate} · {event.venue}</div>
         <div className="mt-4 flex justify-between text-[10px] text-white/40"><span>Tickets issued</span><span className="font-mono text-white/70">{capacityLabel}</span></div>
@@ -38,7 +38,7 @@ export default function Sidebar({ page, setPage, tickets, event, role, email, op
       <div className="mt-auto flex min-w-0 items-center gap-3 border-t border-white/[.07] pt-4">
         <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#9b4b2c] to-[#4d2118] font-display text-xs font-bold">{(email || 'G').slice(0, 1).toUpperCase()}</div>
         <div className="min-w-0 flex-1"><div className="truncate text-xs font-semibold text-white/85">{email}</div><div className="mt-0.5 text-[10px] capitalize text-white/35">{role} access</div></div>
-        <button onClick={onSignOut} title="Sign out" aria-label="Sign out" className="rounded-lg p-2 text-white/35 hover:bg-white/[.05] hover:text-white"><LogOut size={15}/></button>
+        {!preview && <button onClick={onSignOut} title="Sign out" aria-label="Sign out" className="rounded-lg p-2 text-white/35 hover:bg-white/[.05] hover:text-white"><LogOut size={15}/></button>}
       </div>
     </aside>
   </>;

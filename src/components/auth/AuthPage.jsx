@@ -29,7 +29,7 @@ export default function AuthPage({ supabase }) {
     setNotice('');
     const { error: authError } = await supabase.auth.signInWithOtp({
       email: email.trim(),
-      options: { shouldCreateUser: false, emailRedirectTo: window.location.origin },
+      options: { shouldCreateUser: true, emailRedirectTo: window.location.origin },
     });
     if (authError) setError(authError.message);
     else setNotice('Check your email for a secure sign-in link.');

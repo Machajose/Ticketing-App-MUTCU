@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { mapEvent } from '../config/event';
+import { localPreviewEvent, mapEvent } from '../config/event';
 
 function mapTicket(row) {
   return {
@@ -14,14 +14,15 @@ function mapTicket(row) {
   };
 }
 
-export function useTickets(user, notify, setScanResult) {
+export function useTickets(user, notify, setScanResult, preview = false) {
   const [tickets, setTickets] = useState([]);
-  const [event, setEvent] = useState(null);
-  const [role, setRole] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [event, setEvent] = useState(preview ? localPreviewEvent : null);
+  const [role, setRole] = useState(preview ? 'owner' : null);
+  const [loading, setLoading] = useState(!preview);
   const [loadError, setLoadError] = useState('');
 
   const refresh = useCallback(async () => {
+    if (preview) return;
     setLoading(true);
     setLoadError('');
     try {
@@ -58,12 +59,18 @@ export function useTickets(user, notify, setScanResult) {
     } finally {
       setLoading(false);
     }
-  }, [user.id]);
+  }, [user.id, preview]);
 
   useEffect(() => { refresh(); }, [refresh]);
 
   const createTicket = useCallback(async ({ fullName, phone, mpesaCode }) => {
     if (!event) throw new Error('Event details have not loaded yet.');
+    if (preview) {
+      const serial = tickets.length + 1;
+      const ticket = { id: crypto.randomUUID(), ticketId: 'GEMS' + String(serial).padStart(3, '0'), token: crypto.randomUUID(), fullName: fullName.trim(), phone: phone.trim(), mpesaCode: mpesaCode.trim().toUpperCase(), ticketType: 'General admission', pricePaid: event.price, payment_status: 'confirmed', status: 'Not checked in', created_at: new Date().toISOString() };
+      setTickets((current) => [ticket, ...current]);
+      return ticket;
+    }
     const row = {
       event_id: event.id,
       full_name: fullName.trim(),
@@ -83,11 +90,18 @@ export function useTickets(user, notify, setScanResult) {
     const ticket = mapTicket(data);
     setTickets((current) => [ticket, ...current]);
     return ticket;
-  }, [event, user.id]);
+  }, [event, user.id, preview, tickets.length]);
 
   const checkIn = useCallback(async (ticket) => {
     try {
       if (ticket.status === 'Checked in') throw new Error(`${ticket.fullName} has already checked in.`);
+      if (preview) {
+        const updated = { ...ticket, status: 'Checked in', checked_in_at: new Date().toISOString() };
+        setTickets((current) => current.map((item) => item.id === updated.id ? updated : item));
+        setScanResult({ ok: true, ticket: updated, message: 'Preview check-in complete. This change is not saved to Supabase.' });
+        notify(`${updated.fullName} checked in in preview`);
+        return updated;
+      }
       const { data, error } = await supabase
         .from('gems_tickets')
         .update({ status: 'Checked in', checked_in_at: new Date().toISOString() })
@@ -106,7 +120,7 @@ export function useTickets(user, notify, setScanResult) {
       setScanResult({ ok: false, ticket, message: error.message || 'Ticket check-in failed.' });
       return null;
     }
-  }, [notify, setScanResult]);
+  }, [notify, setScanResult, preview]);
 
   const stats = useMemo(() => {
     const paidTickets = tickets.filter((ticket) => ticket.payment_status === 'confirmed');
