@@ -27,7 +27,7 @@ export function useTickets(user, notify, setScanResult, preview = false) {
     setLoadError('');
     try {
       const { data: membership, error: membershipError } = await supabase
-        .from('gems_organizers')
+        .from('creative_ministry_organizers')
         .select('role')
         .eq('user_id', user.id)
         .single();
@@ -35,18 +35,18 @@ export function useTickets(user, notify, setScanResult, preview = false) {
       setRole(membership.role);
 
       const { data: eventRow, error: eventError } = await supabase
-        .from('gems_events')
+        .from('creative_ministry_events')
         .select('*')
         .order('starts_at', { ascending: true })
         .limit(1)
         .maybeSingle();
       if (eventError) throw eventError;
-      if (!eventRow) throw new Error('No event is set up in gems_events yet. Add an event in Supabase, then refresh.');
+      if (!eventRow) throw new Error('No event is set up in creative_ministry_events yet. Add an event in Supabase, then refresh.');
       const currentEvent = mapEvent(eventRow);
       setEvent(currentEvent);
 
       const { data: rows, error: ticketsError } = await supabase
-        .from('gems_tickets')
+        .from('creative_ministry_tickets')
         .select('*')
         .eq('event_id', eventRow.id)
         .order('created_at', { ascending: false });
@@ -85,7 +85,7 @@ export function useTickets(user, notify, setScanResult, preview = false) {
       currency: event.currency || 'KES',
       issued_by: user.id,
     };
-    const { data, error } = await supabase.from('gems_tickets').insert(row).select('*').single();
+    const { data, error } = await supabase.from('creative_ministry_tickets').insert(row).select('*').single();
     if (error) {
       if (error.code === '23505' && /mpesa/i.test(`${error.message || ''} ${error.details || ''} ${error.hint || ''}`)) throw new Error('That M-Pesa reference has already been used. Check the code and try again.');
       throw error;
@@ -106,7 +106,7 @@ export function useTickets(user, notify, setScanResult, preview = false) {
         return updated;
       }
       const { data, error } = await supabase
-        .from('gems_tickets')
+        .from('creative_ministry_tickets')
         .update({ status: 'Checked in', checked_in_at: new Date().toISOString() })
         .eq('id', ticket.id)
         .eq('status', 'Not checked in')
