@@ -4,6 +4,7 @@ import QRCode from 'qrcode';
 import { formatMoney } from '../../config/event';
 import StatusBadge from '../ui/StatusBadge';
 import TicketArtwork from './TicketArtwork';
+import { getTicketWelcomeMessage } from '../../config/ticketMessages';
 
 export function IssueTicketModal({ event, onClose, onCreate, onCreated }) {
   const [form, setForm] = useState({ fullName: '', phone: '', mpesaCode: '' });
@@ -32,8 +33,7 @@ export function IssueTicketModal({ event, onClose, onCreate, onCreated }) {
 
 export function TicketPreviewModal({ event, ticket, onClose }) {
   const [downloading, setDownloading] = useState(false);
-  const firstName = ticket.fullName.trim().split(/\s+/)[0] || 'Guest';
-  const welcomeMessage = "You're part of the story, " + firstName + ".";
+  const welcomeMessage = getTicketWelcomeMessage(ticket);
 
   async function downloadTicket() {
     setDownloading(true);

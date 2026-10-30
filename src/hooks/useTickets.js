@@ -65,6 +65,9 @@ export function useTickets(user, notify, setScanResult, preview = false) {
 
   const createTicket = useCallback(async ({ fullName, phone, mpesaCode }) => {
     if (!event) throw new Error('Event details have not loaded yet.');
+    const normalizedMpesaCode = mpesaCode.trim().toUpperCase();
+    const duplicateReference = tickets.some((ticket) => String(ticket.mpesaCode || '').trim().toUpperCase() === normalizedMpesaCode);
+    if (duplicateReference) throw new Error('That M-Pesa reference is already attached to a ticket. Check the code and try again.');
     if (preview) {
       const serial = tickets.length + 1;
       const ticket = { id: crypto.randomUUID(), ticketId: 'GEMS' + String(serial).padStart(3, '0'), token: crypto.randomUUID(), fullName: fullName.trim(), phone: phone.trim(), mpesaCode: mpesaCode.trim().toUpperCase(), ticketType: 'General admission', pricePaid: event.price, payment_status: 'confirmed', status: 'Not checked in', created_at: new Date().toISOString() };
@@ -75,7 +78,7 @@ export function useTickets(user, notify, setScanResult, preview = false) {
       event_id: event.id,
       full_name: fullName.trim(),
       phone: phone.trim(),
-      mpesa_code: mpesaCode.trim().toUpperCase(),
+      mpesa_code: normalizedMpesaCode,
       payment_status: 'confirmed',
       status: 'Not checked in',
       price_paid: event.price,
@@ -84,13 +87,13 @@ export function useTickets(user, notify, setScanResult, preview = false) {
     };
     const { data, error } = await supabase.from('gems_tickets').insert(row).select('*').single();
     if (error) {
-      if (error.code === '23505') throw new Error('That M-Pesa reference has already been used. Check the code and try again.');
+      if (error.code === '23505' && /mpesa/i.test(`${error.message || ''} ${error.details || ''} ${error.hint || ''}`)) throw new Error('That M-Pesa reference has already been used. Check the code and try again.');
       throw error;
     }
     const ticket = mapTicket(data);
     setTickets((current) => [ticket, ...current]);
     return ticket;
-  }, [event, user.id, preview, tickets.length]);
+  }, [event, user.id, preview, tickets]);
 
   const checkIn = useCallback(async (ticket) => {
     try {
