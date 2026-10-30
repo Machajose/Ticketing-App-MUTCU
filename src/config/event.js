@@ -1,18 +1,24 @@
 import ticketArtwork from '../assets/mapenzi-ticket.png.jpg';
 import overviewArtwork from '../assets/mapenzi-overview.png.jpg';
 
-export const event = {
-  name: 'Mapenzi ya Kifaurongo',
-  subtitle: 'Edition III · Live play performance',
-  date: 'Wednesday, November 4, 2026',
-  shortDate: 'November 4, 2026',
-  time: '7:00 PM – 9:00 PM',
-  venue: 'Assembly Hall',
-  price: 50,
-  currency: 'KES',
-  capacity: 250,
-  ticketArtwork,
-  overviewArtwork,
-};
+export const eventArtwork = { ticket: ticketArtwork, overview: overviewArtwork };
 
-export const formatMoney = (amount) => event.currency + ' ' + Number(amount).toLocaleString('en-KE');
+export function mapEvent(row) {
+  const start = new Date(row.starts_at);
+  const end = new Date(row.ends_at);
+  const dateOptions = { timeZone: 'Africa/Nairobi', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+  const shortDateOptions = { timeZone: 'Africa/Nairobi', day: 'numeric', month: 'long', year: 'numeric' };
+  const timeOptions = { timeZone: 'Africa/Nairobi', hour: 'numeric', minute: '2-digit' };
+  return {
+    ...row,
+    edition: row.edition,
+    shortDate: new Intl.DateTimeFormat('en-KE', shortDateOptions).format(start),
+    date: new Intl.DateTimeFormat('en-KE', dateOptions).format(start),
+    time: new Intl.DateTimeFormat('en-KE', timeOptions).format(start) + ' – ' + new Intl.DateTimeFormat('en-KE', timeOptions).format(end),
+    price: Number(row.ticket_price),
+    ticketArtwork: eventArtwork.ticket,
+    overviewArtwork: eventArtwork.overview,
+  };
+}
+
+export const formatMoney = (amount, currency = 'KES') => currency + ' ' + Number(amount || 0).toLocaleString('en-KE');

@@ -1,38 +1,28 @@
-# GEMS TICKETS — Local demo
+# GEMS Tickets
 
-A refreshed, self-contained event-ticketing demo for **Mapenzi ya Kifaurongo — Edition III**. The event is on Wednesday, November 4, 2026, from 7:00 PM to 9:00 PM at Assembly Hall. There is one admission type priced at KES 50. It uses React, Vite, Tailwind CSS, and a small Node.js/Express API. Ticket records are kept in `server/data/tickets.json`; there are no Supabase credentials, external accounts, or hosted services required.
+GEMS Tickets is the event operations workspace for issuing admission tickets, managing guests, and checking tickets in. The React and Vite app stores live records in Supabase and uses Supabase Auth plus database row-level security to restrict access to organizers.
 
-## Run it in VS Code
+## Local setup
 
-1. Extract the ZIP, then open the extracted `GEMSTICKETS-local-demo` folder in VS Code.
-2. Install Node.js 20 or newer if it is not already installed.
-3. Open a terminal in the project folder and run:
+1. Copy `.env.example` to `.env.local`.
+2. Fill in `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` from your Supabase project. The publishable key is intended for browser use with the configured RLS policies. Never put a Supabase secret/service-role key in this file or in frontend code.
+3. Install dependencies and start Vite:
 
    ```bash
    npm install
    npm run dev
    ```
 
-4. Open the local address Vite prints, usually `http://localhost:5173`.
+4. Sign in with an email/password for a user listed in `public.gems_organizers`. The secure email sign-in link also works if Supabase Auth email delivery is configured.
 
-Keep the terminal running while using the app. The Vite development server sends `/api` requests to the Express server on port `3001`. Camera QR scanning works on `localhost` after you grant browser camera permission. You can also check guests in by ticket ID without using the camera.
+## Supabase tables and roles
 
-## What you can try
+The app reads `public.gems_events`, `public.gems_organizers`, and `public.gems_tickets`. The first event row is shown in the workspace. Organizer roles are `owner`, `manager`, and `checkin`; owners and managers can issue tickets and export the guest list, while check-in staff can admit guests.
 
-- Explore the event overview and ticket sales summary.
-- Issue a single admission ticket for KES 50 with a guest name, phone number, and M-Pesa confirmation.
-- Preview and download a PNG ticket that blends the Mapenzi ya Kifaurongo poster with the QR check-in stub.
-- Search and filter the guest list, then export it as CSV.
-- Admit a guest by ticket ID or QR scan. A ticket cannot be admitted twice.
-- Refresh the page; the sample list and new tickets persist in the local JSON file.
+Ticket issuance records a confirmed M-Pesa payment only after the organizer checks the verification box. This is a manual confirmation step; the app does not contact M-Pesa to verify transactions.
 
-The seeded guest records are presentation/demo data, not live payment processing. This local prototype is not a production payment or authentication system.
+If email sign-in links do not return to the app, add the Vercel production URL and local `http://localhost:5173/**` to Supabase Authentication's allowed redirect URLs.
 
-## Production build
+## Deployment
 
-```bash
-npm run build
-npm start
-```
-
-Express serves the production frontend and API at `http://localhost:3001` after the build.
+Vercel builds the Vite app with `npm run build` and serves `dist`. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` for Production and Preview in Project Settings, then redeploy after changing them. No Express server or local JSON ticket store is used by the app.
