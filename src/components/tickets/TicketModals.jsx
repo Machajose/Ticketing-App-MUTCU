@@ -55,14 +55,14 @@ export function TicketPreviewModal({ event, ticket, onClose }) {
       context.roundRect(56, 706, 1188, 154, 18);
       context.fill();
       context.fillStyle = '#ffc5aa';
-      context.font = '700 22px Arial, sans-serif';
-      context.fillText('EDITION III  ·  GUEST ADMISSION  ·  ' + ticket.ticketId, 82, 735);
+      context.font = '700 26px Arial, sans-serif';
+      context.fillText('EDITION III  ·  GUEST ADMISSION  ·  ' + ticket.ticketId, 82, 736);
       context.fillStyle = '#fffaf2';
-      context.font = '800 44px Arial, sans-serif';
-      context.fillText(ticket.fullName.slice(0, 34), 82, 779, 1120);
+      context.font = '800 58px Arial, sans-serif';
+      context.fillText(ticket.fullName.slice(0, 34), 82, 795, 1120);
       context.fillStyle = '#f5e7df';
-      context.font = '600 28px Arial, sans-serif';
-      context.fillText(welcomeMessage, 82, 827, 1120);
+      context.font = '600 40px Arial, sans-serif';
+      context.fillText(welcomeMessage, 82, 847, 1120);
       const qrImage = await loadImage(qrData);
       context.fillStyle = '#fffdf8';
       context.beginPath();
@@ -84,7 +84,7 @@ export function TicketPreviewModal({ event, ticket, onClose }) {
 
   return <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/75 p-0 backdrop-blur-sm sm:items-center sm:p-4" onMouseDown={(e) => e.target === e.currentTarget && onClose()}><div className="w-full max-w-[760px] max-h-[calc(100dvh-2rem)] overflow-x-hidden overflow-y-auto rounded-t-[24px] border border-white/10 bg-[#191817] shadow-2xl sm:rounded-[24px]"><div className="flex items-center justify-between border-b border-white/[.07] px-5 py-4"><div><span className="text-[9px] font-bold uppercase tracking-[.2em] text-ember">{event.name} admission</span><div className="mt-1 text-xs font-semibold text-white">{ticket.ticketId}</div></div><button onClick={onClose} aria-label="Close ticket preview" className="rounded-lg p-2 text-white/40 hover:bg-white/[.06]"><X size={16}/></button></div>
     <div className="p-4 sm:p-6"><div className="overflow-x-auto rounded-xl border border-white/10"><TicketArtwork event={event} ticket={ticket} message={welcomeMessage}/></div>
-      <div className="mt-4 flex items-center justify-between"><StatusBadge status={ticket.status} paymentStatus={ticket.payment_status}/><button onClick={downloadTicket} disabled={downloading} className="inline-flex h-10 items-center gap-2 rounded-xl bg-ember px-4 text-[10px] font-bold text-ink hover:bg-[#ff7748] disabled:opacity-60"><Download size={14}/>{downloading ? 'Preparing…' : 'Download ticket'}</button></div></div>
+      <div className="mt-5 grid gap-3 border-t border-white/[.08] pt-4 sm:flex sm:items-center sm:justify-between"><div className="rounded-xl border border-white/[.07] bg-white/[.025] px-3.5 py-3"><div className="mb-1.5 text-[9px] font-bold uppercase tracking-[.14em] text-white/35">Admission status</div><StatusBadge status={ticket.status} paymentStatus={ticket.payment_status}/></div><button onClick={downloadTicket} disabled={downloading} className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-ember px-4 text-[11px] font-bold text-ink hover:bg-[#ff7748] disabled:opacity-60 sm:w-auto"><Download size={15}/>{downloading ? 'Preparing…' : 'Download ticket'}</button></div></div>
   </div></div>;
 }
 
