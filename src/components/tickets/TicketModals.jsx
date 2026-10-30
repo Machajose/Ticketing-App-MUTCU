@@ -55,14 +55,14 @@ export function TicketPreviewModal({ event, ticket, onClose }) {
       context.roundRect(56, 706, 1188, 154, 18);
       context.fill();
       context.fillStyle = '#ffc5aa';
-      context.font = '700 15px Arial, sans-serif';
+      context.font = '700 22px Arial, sans-serif';
       context.fillText('EDITION III  ·  GUEST ADMISSION  ·  ' + ticket.ticketId, 82, 735);
       context.fillStyle = '#fffaf2';
-      context.font = '800 32px Arial, sans-serif';
+      context.font = '800 44px Arial, sans-serif';
       context.fillText(ticket.fullName.slice(0, 34), 82, 779, 1120);
       context.fillStyle = '#f5e7df';
-      context.font = '600 17px Arial, sans-serif';
-      context.fillText(welcomeMessage, 82, 811, 1120);
+      context.font = '600 28px Arial, sans-serif';
+      context.fillText(welcomeMessage, 82, 827, 1120);
       const qrImage = await loadImage(qrData);
       context.fillStyle = '#fffdf8';
       context.beginPath();
